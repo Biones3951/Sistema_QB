@@ -1,11 +1,12 @@
 import { BrowserRouter } from 'react-router-dom'
 import { CartProvider } from './context/CartContext'
 import Header from './components/layout/Header'
-import Footer from './components/layout/Footer'
 import HeroSection from './components/layout/HeroSection'
 import Categories from './components/layout/Categories'
-import Benefits from './components/layout/Benefits'
 import ProductList from './components/product/ProductList'
+import Benefits from './components/layout/Benefits'
+import Footer from './components/layout/Footer'
+import Cart from './components/product/Cart'
 
 function App() {
   return (
@@ -16,10 +17,11 @@ function App() {
           <main style={styles.main}>
             <HeroSection />
             <Categories />
-            <Benefits />
             <ProductList />
+            <Benefits />
           </main>
           <Footer />
+          <Cart />
         </div>
       </BrowserRouter>
     </CartProvider>
