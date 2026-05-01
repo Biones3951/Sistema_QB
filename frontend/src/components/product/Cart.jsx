@@ -2,11 +2,13 @@ import { useState, useEffect, useRef } from 'react'
 import { useCart } from '../../context/CartContext'
 import { formatPrice } from '../../utils/formatters'
 import { generateWhatsAppMessage, createWhatsAppLink } from '../../utils/whatsapp'
+import { useIsMobile } from '../../hooks/useIsMobile'
 
 const WHATSAPP_NUMBER = '5511999999999'
 
 function Cart() {
   const { items, removeItem, updateQuantity, getTotal, getItemCount, clearCart } = useCart()
+  const isMobile = useIsMobile()
   const [isOpen, setIsOpen] = useState(false)
   const modalRef = useRef(null)
 
@@ -50,7 +52,8 @@ function Cart() {
         onClick={() => setIsOpen(true)}
         style={{
           ...styles.floatingButton,
-          ...(itemCount > 0 ? {} : styles.emptyCartBtn)
+          ...(isMobile ? styles.floatingButtonMobile : {}),
+          ...(itemCount > 0 ? {} : styles.emptyCartBtn),
         }}
       >
         <div style={styles.cartBtnIcon}>
@@ -61,15 +64,20 @@ function Cart() {
           </svg>
           {itemCount > 0 && <span style={styles.cartBtnBadge}>{itemCount}</span>}
         </div>
-        <span style={styles.cartBtnText}>
-          {itemCount > 0 ? `Ver Carrinho (${itemCount})` : 'Carrinho'}
-        </span>
+        {!isMobile && (
+          <span style={styles.cartBtnText}>
+            {itemCount > 0 ? `Ver Carrinho (${itemCount})` : 'Carrinho'}
+          </span>
+        )}
       </button>
 
       {/* Cart Modal */}
       {isOpen && (
         <div style={styles.overlay} onClick={handleOverlayClick}>
-          <div style={styles.modal} ref={modalRef}>
+          <div style={{
+            ...styles.modal,
+            ...(isMobile ? styles.modalMobile : {}),
+          }} ref={modalRef}>
             {/* Header */}
             <div style={styles.modalHeader}>
               <div style={styles.modalTitle}>
@@ -116,27 +124,54 @@ function Cart() {
               ) : (
                 <div style={styles.cartItems}>
                   {items.map(item => (
-                    <div key={item.id} style={styles.cartItem}>
+                    <div key={item.id} style={{
+                      ...styles.cartItem,
+                      ...(isMobile ? styles.cartItemMobile : {}),
+                    }}>
                       <img 
                         src={item.image_url || 'https://placehold.co/80'} 
                         alt={item.name}
-                        style={styles.cartItemImg}
+                        style={{
+                          ...styles.cartItemImg,
+                          ...(isMobile ? { width: '56px', height: '56px' } : {}),
+                        }}
                       />
-                      <div style={styles.cartItemInfo}>
-                        <h4 style={styles.cartItemName}>{item.name}</h4>
-                        <span style={styles.cartItemPrice}>{formatPrice(item.price)}</span>
+                      <div style={{
+                        ...styles.cartItemInfo,
+                        ...(isMobile ? styles.cartItemInfoMobile : {}),
+                      }}>
+                        <h4 style={{
+                          ...styles.cartItemName,
+                          ...(isMobile ? { fontSize: '0.8125rem' } : {}),
+                        }}>{item.name}</h4>
+                        <span style={{
+                          ...styles.cartItemPrice,
+                          ...(isMobile ? { fontSize: '0.875rem' } : {}),
+                        }}>{formatPrice(item.price)}</span>
                       </div>
-                      <div style={styles.qtyControl}>
+                      <div style={{
+                        ...styles.qtyControl,
+                        ...(isMobile ? { gap: '0.25rem' } : {}),
+                      }}>
                         <button 
                           onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                          style={styles.qtyBtn}
+                          style={{
+                            ...styles.qtyBtn,
+                            ...(isMobile ? { width: '28px', height: '28px', fontSize: '0.875rem' } : {}),
+                          }}
                         >
                           −
                         </button>
-                        <span style={styles.qtyValue}>{item.quantity}</span>
+                        <span style={{
+                          ...styles.qtyValue,
+                          ...(isMobile ? { fontSize: '0.8125rem', width: '28px' } : {}),
+                        }}>{item.quantity}</span>
                         <button 
                           onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                          style={styles.qtyBtn}
+                          style={{
+                            ...styles.qtyBtn,
+                            ...(isMobile ? { width: '28px', height: '28px', fontSize: '0.875rem' } : {}),
+                          }}
                         >
                           +
                         </button>
@@ -146,7 +181,10 @@ function Cart() {
                       </span>
                       <button 
                         onClick={() => removeItem(item.id)}
-                        style={styles.removeBtn}
+                        style={{
+                          ...styles.removeBtn,
+                          ...(isMobile ? { width: '28px', height: '28px' } : {}),
+                        }}
                       >
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" strokeWidth="2">
                           <polyline points="3 6 5 6 21 6"/>
@@ -217,6 +255,11 @@ const styles = {
     zIndex: 1000,
     transition: 'all 0.3s ease',
   },
+  floatingButtonMobile: {
+    bottom: '1.25rem',
+    right: '1.25rem',
+    padding: '0.875rem',
+  },
   emptyCartBtn: {
     background: '#64748B',
   },
@@ -263,6 +306,9 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     animation: 'slideInRight 0.3s ease',
+  },
+  modalMobile: {
+    maxWidth: '100%',
   },
   modalHeader: {
     display: 'flex',
@@ -365,6 +411,10 @@ const styles = {
     background: '#F8FAFC',
     borderRadius: '0.75rem',
   },
+  cartItemMobile: {
+    padding: '0.75rem',
+    gap: '0.5rem',
+  },
   cartItemImg: {
     width: '64px',
     height: '64px',
@@ -375,6 +425,9 @@ const styles = {
   cartItemInfo: {
     flex: 1,
     minWidth: 0,
+  },
+  cartItemInfoMobile: {
+    flex: '1 1 auto',
   },
   cartItemName: {
     fontSize: '0.875rem',

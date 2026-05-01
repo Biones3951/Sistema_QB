@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react'
 import { productService } from '../../services/api'
 import ProductCard from './ProductCard'
+import { useIsMobile } from '../../hooks/useIsMobile'
 
 function ProductList() {
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const isMobile = useIsMobile()
 
   useEffect(() => {
     loadProducts()
@@ -48,18 +50,35 @@ function ProductList() {
 
   return (
     <section style={styles.section} id="produtos">
-      <div style={styles.container}>
-        <div style={styles.header}>
-          <h2 style={styles.title}>Mais vendidos</h2>
+      <div style={{
+        ...styles.container,
+        ...(isMobile ? { padding: '0 1rem' } : {}),
+      }}>
+        <div style={{
+          ...styles.header,
+          ...(isMobile ? { 
+            flexDirection: 'column', 
+            alignItems: 'flex-start', 
+            gap: '0.5rem',
+            marginBottom: '1.25rem',
+          } : {}),
+        }}>
+          <h2 style={{
+            ...styles.title,
+            ...(isMobile ? { fontSize: '1.375rem' } : {}),
+          }}>Mais vendidos</h2>
           <a href="#produtos" style={styles.viewAll}>Ver todos →</a>
         </div>
 
         {products.length === 0 ? (
           <p style={styles.empty}>Nenhum produto encontrado</p>
         ) : (
-          <div style={styles.grid}>
+          <div style={{
+            ...styles.grid,
+            ...(isMobile ? { gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.75rem' } : {}),
+          }}>
             {products.map((product) => (
-              <ProductCard key={product.id} product={product} />
+              <ProductCard key={product.id} product={product} isMobile={isMobile} />
             ))}
           </div>
         )}
@@ -72,6 +91,7 @@ const styles = {
   section: {
     padding: '4rem 0',
     background: '#FFFFFF',
+    overflowX: 'hidden',
   },
   container: {
     maxWidth: '1400px',

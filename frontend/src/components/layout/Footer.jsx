@@ -1,8 +1,22 @@
+import { useIsMobile } from '../../hooks/useIsMobile'
+
 function Footer() {
+  const isMobile = useIsMobile()
+
   return (
     <footer style={styles.footer} id="contato">
-      <div style={styles.container}>
-        <div style={styles.grid}>
+      <div style={{
+        ...styles.container,
+        ...(isMobile ? { padding: '0 1rem' } : {}),
+      }}>
+        <div style={{
+          ...styles.grid,
+          ...(isMobile ? {
+            gridTemplateColumns: '1fr',
+            gap: '2rem',
+            marginBottom: '2rem',
+          } : {}),
+        }}>
           {/* Brand & Description */}
           <div style={styles.col}>
             <a href="#" style={styles.logo}>

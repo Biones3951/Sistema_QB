@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { BrowserRouter } from 'react-router-dom'
 import { CartProvider } from './context/CartContext'
 import Header from './components/layout/Header'
@@ -9,6 +10,21 @@ import Footer from './components/layout/Footer'
 import Cart from './components/product/Cart'
 
 function App() {
+  useEffect(() => {
+    document.body.style.margin = '0'
+    document.body.style.padding = '0'
+    document.body.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+
+    const style = document.createElement('style')
+    style.textContent = `
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body { overflow-x: hidden; margin: 0; }
+    `
+    document.head.appendChild(style)
+    return () => { document.head.removeChild(style) }
+  }, [])
+
   return (
     <CartProvider>
       <BrowserRouter>

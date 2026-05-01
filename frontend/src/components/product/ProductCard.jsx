@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useCart } from '../../context/CartContext'
 
-function ProductCard({ product }) {
+function ProductCard({ product, isMobile = false }) {
   const { addItem } = useCart()
   const [isAdding, setIsAdding] = useState(false)
   const [imageError, setImageError] = useState(false)
@@ -40,20 +40,42 @@ function ProductCard({ product }) {
         />
       </div>
 
-      <div style={styles.content}>
-        <h3 style={styles.name}>{product.name}</h3>
-        <p style={styles.description}>
-          {product.description?.slice(0, 60) || 'Produto de qualidade'}
-          {(product.description?.length || 0) > 60 && '...'}
+      <div style={{
+        ...styles.content,
+        ...(isMobile ? { padding: '0.75rem' } : {}),
+      }}>
+        <h3 style={{
+          ...styles.name,
+          ...(isMobile ? { fontSize: '0.875rem', marginBottom: '0.25rem' } : {}),
+        }}>
+          {product.name}
+        </h3>
+        <p style={{
+          ...styles.description,
+          ...(isMobile ? { 
+            fontSize: '0.6875rem', 
+            marginBottom: '0.5rem',
+            WebkitLineClamp: '1',
+          } : {}),
+        }}>
+          {product.description?.slice(0, isMobile ? 40 : 60) || 'Produto de qualidade'}
+          {(product.description?.length || 0) > (isMobile ? 40 : 60) && '...'}
         </p>
-        <div style={styles.footer}>
-          <span style={styles.price}>{formatPrice(product.price)}</span>
+        <div style={{
+          ...styles.footer,
+          ...(isMobile ? { flexDirection: 'column', gap: '0.5rem', alignItems: 'flex-start' } : {}),
+        }}>
+          <span style={{
+            ...styles.price,
+            ...(isMobile ? { fontSize: '1rem' } : {}),
+          }}>{formatPrice(product.price)}</span>
           <button 
             onClick={handleAdd}
             disabled={product.stock < 1 || isAdding}
             style={{
               ...styles.button,
-              ...(isAdding ? styles.buttonActive : {})
+              ...(isMobile ? { width: '100%', justifyContent: 'center', padding: '0.5rem' } : {}),
+              ...(isAdding ? styles.buttonActive : {}),
             }}
           >
             {isAdding ? (
@@ -105,11 +127,18 @@ const styles = {
     fontWeight: '700',
     color: '#0F172A',
     marginBottom: '0.375rem',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
   },
   description: {
     fontSize: '0.8125rem',
     color: '#64748B',
     marginBottom: '0.75rem',
+    display: '-webkit-box',
+    WebkitLineClamp: 2,
+    WebkitBoxOrient: 'vertical',
+    overflow: 'hidden',
   },
   footer: {
     display: 'flex',
@@ -133,6 +162,7 @@ const styles = {
     fontSize: '0.75rem',
     fontWeight: '600',
     cursor: 'pointer',
+    flexShrink: 0,
   },
   buttonActive: {
     background: '#10B981',
