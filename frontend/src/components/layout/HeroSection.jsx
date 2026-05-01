@@ -170,8 +170,8 @@ const styles = {
     gridTemplateColumns: 'unset',
     alignItems: 'center',
     gap: '0',
-    padding: '2.5rem 1.25rem 2rem',
-    minHeight: '600px',
+    padding: '2.5rem 1.25rem 2.5rem',
+    minHeight: '620px',
   },
   content: {
     maxWidth: '600px',
@@ -272,10 +272,11 @@ const styles = {
     animation: 'float 4s ease-in-out infinite',
   },
   heroImageMobile: {
-    width: '200px',
+    width: '100%',
+    maxWidth: '280px',
     filter: 'drop-shadow(0 15px 30px rgba(0,0,0,0.10))',
     animation: 'none',
-    margin: '16px auto 0',
+    margin: '0 auto',
   },
 }
 

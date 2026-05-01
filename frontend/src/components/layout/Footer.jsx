@@ -1,4 +1,5 @@
 import { useIsMobile } from '../../hooks/useIsMobile'
+import logo from '../../assets/logo.jpg'
 
 function Footer() {
   const isMobile = useIsMobile()
@@ -20,7 +21,7 @@ function Footer() {
           {/* Brand & Description */}
           <div style={styles.col}>
             <a href="#" style={styles.logo}>
-              <img src="/src/assets/logo.jpg" alt="QB Home" style={styles.logoImg} />
+              <img src={logo} alt="QB Home" style={styles.logoImg} />
             </a>
             <p style={styles.desc}>
               Sua loja online de produtos para casa e decoração. Qualidade e praticidade para seu lar.

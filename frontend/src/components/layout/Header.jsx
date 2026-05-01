@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useCart } from '../../context/CartContext'
 import { useIsMobile } from '../../hooks/useIsMobile'
+import logo from '../../assets/logo.jpg'
 
 function Header() {
   const { getItemCount, getTotal } = useCart()
@@ -37,7 +38,7 @@ function Header() {
           {/* Mobile Topbar */}
           <div style={styles.mobileTopbar}>
             <a href="#" style={styles.mobileLogo}>
-              <img src="/src/assets/logo.jpg" alt="QB Home" style={styles.mobileLogoImg} />
+              <img src={logo} alt="QB Home" style={styles.mobileLogoImg} />
             </a>
             <div style={styles.mobileActions}>
               <button 
@@ -125,7 +126,7 @@ function Header() {
           <div style={{...styles.mainHeader, ...(scrolled ? styles.scrolled : {})}}>
             <div style={styles.headerContent}>
               <a href="#" style={styles.logo}>
-                <img src="/src/assets/logo.jpg" alt="QB Home" style={styles.logoImg} />
+                <img src={logo} alt="QB Home" style={styles.logoImg} />
               </a>
 
               <nav style={styles.nav}>
