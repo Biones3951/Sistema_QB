@@ -3,7 +3,7 @@ import { useCart } from '../../context/CartContext'
 import { useIsMobile } from '../../hooks/useIsMobile'
 import logo from '../../assets/logo.jpg'
 
-function Header() {
+function Header({ currentPage = 'home', onNavigate }) {
   const { getItemCount, getTotal } = useCart()
   const isMobile = useIsMobile()
   const [scrolled, setScrolled] = useState(false)
@@ -75,11 +75,11 @@ function Header() {
           {menuOpen && (
             <div style={styles.mobileOverlay} onClick={() => setMenuOpen(false)}>
               <nav style={styles.mobileNav} onClick={(e) => e.stopPropagation()}>
-                <a href="#" onClick={() => setMenuOpen(false)} style={styles.mobileLink}>Início</a>
-                <a href="#produtos" onClick={() => setMenuOpen(false)} style={styles.mobileLink}>Produtos</a>
-                <a href="#categorias" onClick={() => setMenuOpen(false)} style={styles.mobileLink}>Categorias</a>
-                <a href="#sobre" onClick={() => setMenuOpen(false)} style={styles.mobileLink}>Sobre nós</a>
-                <a href="#contato" onClick={() => setMenuOpen(false)} style={styles.mobileLink}>Contato</a>
+                <a href="#" onClick={(e) => { e.preventDefault(); setMenuOpen(false); onNavigate('home'); }} style={styles.mobileLink}>Início</a>
+                <a href="#" onClick={(e) => { e.preventDefault(); setMenuOpen(false); onNavigate('home'); }} style={styles.mobileLink}>Produtos</a>
+                <a href="#" onClick={(e) => { e.preventDefault(); setMenuOpen(false); onNavigate('home'); }} style={styles.mobileLink}>Categorias</a>
+                <a href="#" onClick={(e) => { e.preventDefault(); setMenuOpen(false); onNavigate('sobre'); }} style={styles.mobileLink}>Sobre nós</a>
+                <a href="#" onClick={(e) => { e.preventDefault(); setMenuOpen(false); onNavigate('home'); }} style={styles.mobileLink}>Contato</a>
               </nav>
             </div>
           )}
@@ -130,11 +130,11 @@ function Header() {
               </a>
 
               <nav style={styles.nav}>
-                <a href="#" style={{...styles.navLink, ...styles.navLinkActive}}>Início</a>
-                <a href="#produtos" style={styles.navLink}>Produtos</a>
-                <a href="#categorias" style={styles.navLink}>Categorias</a>
-                <a href="#sobre" style={styles.navLink}>Sobre nós</a>
-                <a href="#contato" style={styles.navLink}>Contato</a>
+                <a href="#" onClick={(e) => { e.preventDefault(); onNavigate('home'); }} style={{...styles.navLink, ...(currentPage === 'home' ? styles.navLinkActive : {})}}>Início</a>
+                <a href="#produtos" onClick={(e) => { e.preventDefault(); onNavigate('home'); }} style={styles.navLink}>Produtos</a>
+                <a href="#categorias" onClick={(e) => { e.preventDefault(); onNavigate('home'); }} style={styles.navLink}>Categorias</a>
+                <a href="#" onClick={(e) => { e.preventDefault(); onNavigate('sobre'); }} style={{...styles.navLink, ...(currentPage === 'sobre' ? styles.navLinkActive : {})}}>Sobre nós</a>
+                <a href="#contato" onClick={(e) => { e.preventDefault(); onNavigate('home'); }} style={styles.navLink}>Contato</a>
               </nav>
 
               <button 
@@ -347,6 +347,7 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     gap: '0.5rem',
+    zIndex: 1000,
   },
   mobileLink: {
     padding: '0.875rem 1rem',

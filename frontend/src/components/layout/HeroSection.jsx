@@ -266,14 +266,13 @@ const styles = {
     zIndex: 1,
   },
   heroImageDesktop: {
-    width: '100%',
-    maxWidth: '380px',
+    width: '520px',
+    maxWidth: '520px',
     filter: 'drop-shadow(0 30px 50px rgba(0,0,0,0.12))',
     animation: 'float 4s ease-in-out infinite',
   },
   heroImageMobile: {
-    width: '100%',
-    maxWidth: '280px',
+    width: '280px',
     filter: 'drop-shadow(0 15px 30px rgba(0,0,0,0.10))',
     animation: 'none',
     margin: '0 auto',
