@@ -17,15 +17,12 @@ function ProductList({ onSelectProduct, selectedCategory, onClearCategory, featu
     try {
       setLoading(true)
       setError(null)
-      let data
+      const data = await productService.getAll(selectedCategory?.id || null)
+      let filtered = data
       if (featured) {
-        data = await productService.getFeatured()
-      } else if (selectedCategory) {
-        data = await productService.getAll(selectedCategory.id)
-      } else {
-        data = await productService.getAll()
+        filtered = data.filter(p => p.is_featured)
       }
-      setProducts(data)
+      setProducts(filtered)
     } catch (err) {
       setError(err.message)
     } finally {
@@ -60,7 +57,6 @@ function ProductList({ onSelectProduct, selectedCategory, onClearCategory, featu
 
   const handleViewAll = () => {
     onClearCategory?.()
-    window.scrollTo({ top: document.getElementById('produtos')?.offsetTop - 100, behavior: 'smooth' })
   }
 
   return (
@@ -95,12 +91,12 @@ function ProductList({ onSelectProduct, selectedCategory, onClearCategory, featu
             </button>
           )}
           {!isCategoryView && featured && (
-            <a href="#produtos" onClick={handleViewAll} style={styles.viewAll}>Ver todos os produtos →</a>
+            <a href="#produtos" onClick={(e) => { e.preventDefault(); handleViewAll(); }} style={styles.viewAll}>Ver todos os produtos →</a>
           )}
         </div>
 
         {products.length === 0 ? (
-          <p style={styles.empty}>{isCategoryView ? 'Nenhum produto nesta categoria' : 'Nenhum produto encontrado'}</p>
+          <p style={styles.empty}>{isCategoryView ? 'Nenhum produto nesta categoria' : (featured ? 'Nenhum produto em destaque no momento' : 'Nenhum produto encontrado')}</p>
         ) : (
           <div style={{
             ...styles.grid,

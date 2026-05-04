@@ -17,8 +17,9 @@ function OffersSection({ onSelectProduct }) {
     try {
       setLoading(true)
       setError(null)
-      const data = await productService.getOffers()
-      setProducts(data)
+      const data = await productService.getAll()
+      const offers = data.filter(p => p.is_offer)
+      setProducts(offers)
     } catch (err) {
       setError(err.message)
     } finally {
@@ -59,17 +60,16 @@ function OffersSection({ onSelectProduct }) {
           ...(isMobile ? { gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.75rem' } : {}),
         }}>
           {products.map((product) => (
-            <div key={product.id} style={{
-              ...styles.offerCard,
-            }}>
+            <div key={product.id} style={styles.offerCard}>
               <ProductCard product={product} isMobile={isMobile} onSelectProduct={onSelectProduct} />
               <div style={styles.offerOverlay}>
                 {product.original_price && (
-                  <>
-                    <span style={styles.discountBadge}>
-                      {Math.round((1 - parseFloat(product.price) / parseFloat(product.original_price)) * 100)}% OFF
-                    </span>
-                  </>
+                  <span style={{
+                    ...styles.discountBadge,
+                    ...(isMobile ? { fontSize: '10px', padding: '0.125rem 0.375rem' } : {}),
+                  }}>
+                    {Math.round((1 - parseFloat(product.price) / parseFloat(product.original_price)) * 100)}% OFF
+                  </span>
                 )}
               </div>
             </div>
