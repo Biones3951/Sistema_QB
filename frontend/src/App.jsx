@@ -92,11 +92,9 @@ function SelectedProductView({ selectedProduct, setSelectedProduct, selectedCate
             />
           )}
           {!selectedCategory && (
-            <>
-              <ProductList featured onSelectProduct={setSelectedProduct} />
-              <OffersSection onSelectProduct={setSelectedProduct} />
-            </>
+            <ProductList featured onSelectProduct={setSelectedProduct} />
           )}
+          <OffersSection onSelectProduct={setSelectedProduct} />
           <Benefits />
         </main>
       ) : currentPage === 'sobre' ? (

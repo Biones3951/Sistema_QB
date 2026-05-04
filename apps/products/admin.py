@@ -16,9 +16,10 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['name', 'category', 'price_formatted', 'stock', 'active', 'created_at']
+    list_display = ['name', 'category', 'price_formatted', 'stock', 'is_featured', 'is_offer', 'active', 'created_at']
     list_display_links = ['name']
-    list_filter = ['active', 'category', 'created_at']
+    list_filter = ['active', 'is_offer', 'is_featured', 'category', 'created_at']
+    list_editable = ['is_offer']
     search_fields = ['name', 'description']
     list_per_page = 25
     date_hierarchy = 'created_at'
@@ -30,12 +31,12 @@ class ProductAdmin(admin.ModelAdmin):
         ('Preço e Estoque', {
             'fields': ('price', 'stock')
         }),
+        ('Destaque', {
+            'fields': ('is_active', 'is_offer', 'original_price')
+        }),
         ('Imagem', {
             'fields': ('image_url',),
             'classes': ('collapse',)
-        }),
-        ('Status', {
-            'fields': ('active',)
         }),
     ]
 
@@ -43,6 +44,6 @@ class ProductAdmin(admin.ModelAdmin):
     def price_formatted(self, obj):
         return format_html('<strong>R$ {}</strong>', obj.price)
 
-    @admin.display(boolean=True)
+    @admin.display(boolean=True, description='Ativo')
     def active(self, obj):
         return obj.active
