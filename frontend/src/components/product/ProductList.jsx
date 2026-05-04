@@ -3,7 +3,7 @@ import { productService } from '../../services/api'
 import ProductCard from './ProductCard'
 import { useIsMobile } from '../../hooks/useIsMobile'
 
-function ProductList() {
+function ProductList({ onSelectProduct }) {
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -56,9 +56,9 @@ function ProductList() {
       }}>
         <div style={{
           ...styles.header,
-          ...(isMobile ? { 
-            flexDirection: 'column', 
-            alignItems: 'flex-start', 
+          ...(isMobile ? {
+            flexDirection: 'column',
+            alignItems: 'flex-start',
             gap: '0.5rem',
             marginBottom: '1.25rem',
           } : {}),
@@ -78,7 +78,7 @@ function ProductList() {
             ...(isMobile ? { gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.75rem' } : {}),
           }}>
             {products.map((product) => (
-              <ProductCard key={product.id} product={product} isMobile={isMobile} />
+              <ProductCard key={product.id} product={product} isMobile={isMobile} onSelectProduct={onSelectProduct} />
             ))}
           </div>
         )}

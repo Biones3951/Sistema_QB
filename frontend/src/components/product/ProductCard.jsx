@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useCart } from '../../context/CartContext'
 
-function ProductCard({ product, isMobile = false }) {
+function ProductCard({ product, isMobile = false, onSelectProduct }) {
   const { addItem } = useCart()
   const [isAdding, setIsAdding] = useState(false)
   const [imageError, setImageError] = useState(false)
@@ -15,7 +15,8 @@ function ProductCard({ product, isMobile = false }) {
     </svg>
   `)
 
-  const handleAdd = () => {
+  const handleAdd = (e) => {
+    e.stopPropagation()
     if (product.stock < 1) return
     setIsAdding(true)
     addItem(product)
@@ -30,9 +31,9 @@ function ProductCard({ product, isMobile = false }) {
   }
 
   return (
-    <div style={styles.card}>
+    <div style={styles.card} onClick={() => onSelectProduct?.(product)}>
       <div style={styles.imageContainer}>
-        <img 
+        <img
           src={imageError ? placeholderImg : (product.image_url || placeholderImg)}
           alt={product.name}
           style={styles.image}
@@ -52,8 +53,8 @@ function ProductCard({ product, isMobile = false }) {
         </h3>
         <p style={{
           ...styles.description,
-          ...(isMobile ? { 
-            fontSize: '0.6875rem', 
+          ...(isMobile ? {
+            fontSize: '0.6875rem',
             marginBottom: '0.5rem',
             WebkitLineClamp: '1',
           } : {}),
@@ -69,7 +70,7 @@ function ProductCard({ product, isMobile = false }) {
             ...styles.price,
             ...(isMobile ? { fontSize: '1rem' } : {}),
           }}>{formatPrice(product.price)}</span>
-          <button 
+          <button
             onClick={handleAdd}
             disabled={product.stock < 1 || isAdding}
             style={{
@@ -108,6 +109,7 @@ const styles = {
     borderRadius: '0.5rem',
     overflow: 'hidden',
     border: '1px solid #E2E8F0',
+    cursor: 'pointer',
   },
   imageContainer: {
     background: '#F8FAFC',

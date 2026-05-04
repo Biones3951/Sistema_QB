@@ -130,7 +130,7 @@ function Header({ currentPage = 'home', onNavigate }) {
               </a>
 
               <nav style={styles.nav}>
-                <a href="#" onClick={(e) => { e.preventDefault(); onNavigate('home'); }} style={{...styles.navLink, ...(currentPage === 'home' ? styles.navLinkActive : {})}}>Início</a>
+                <a href="#" onClick={(e) => { e.preventDefault(); onNavigate('home'); }} style={{...styles.navLink, ...(currentPage === 'home' || currentPage === 'detail' ? styles.navLinkActive : {})}}>Início</a>
                 <a href="#produtos" onClick={(e) => { e.preventDefault(); onNavigate('home'); }} style={styles.navLink}>Produtos</a>
                 <a href="#categorias" onClick={(e) => { e.preventDefault(); onNavigate('home'); }} style={styles.navLink}>Categorias</a>
                 <a href="#" onClick={(e) => { e.preventDefault(); onNavigate('sobre'); }} style={{...styles.navLink, ...(currentPage === 'sobre' ? styles.navLinkActive : {})}}>Sobre nós</a>

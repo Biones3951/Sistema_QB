@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react'
-import { CartProvider } from './context/CartContext'
+import { CartProvider, useCart } from './context/CartContext'
 import Header from './components/layout/Header'
 import HeroSection from './components/layout/HeroSection'
 import Categories from './components/layout/Categories'
@@ -8,12 +8,23 @@ import Benefits from './components/layout/Benefits'
 import Footer from './components/layout/Footer'
 import Cart from './components/product/Cart'
 import SobreNos from './components/pages/SobreNos'
+import ProductDetail from './components/product/ProductDetail'
 
 function App() {
+  return (
+    <CartProvider>
+      <AppInner />
+    </CartProvider>
+  )
+}
+
+function AppInner() {
   const [currentPage, setCurrentPage] = useState('home')
+  const [selectedProduct, setSelectedProduct] = useState(null)
 
   const navigate = useCallback((page) => {
     setCurrentPage(page)
+    setSelectedProduct(null)
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [])
 
@@ -33,25 +44,50 @@ function App() {
   }, [])
 
   return (
-    <CartProvider>
-      <div style={styles.app}>
-        <Header currentPage={currentPage} onNavigate={navigate} />
-        {currentPage === 'home' ? (
-          <main style={styles.main}>
-            <HeroSection />
-            <Categories />
-            <ProductList />
-            <Benefits />
-          </main>
-        ) : (
-          <main style={styles.main}>
-            <SobreNos onNavigate={navigate} />
-          </main>
-        )}
-        <Footer />
-        <Cart />
-      </div>
-    </CartProvider>
+    <div style={styles.app}>
+      <Header currentPage={currentPage} onNavigate={navigate} />
+      <SelectedProductView
+        selectedProduct={selectedProduct}
+        setSelectedProduct={setSelectedProduct}
+        currentPage={currentPage}
+        navigate={navigate}
+      />
+      <Footer />
+      <Cart />
+    </div>
+  )
+}
+
+function SelectedProductView({ selectedProduct, setSelectedProduct, currentPage, navigate }) {
+  const { addItem } = useCart()
+
+  const addToCart = useCallback((product, quantity = 1) => {
+    addItem(product, quantity)
+  }, [addItem])
+
+  return (
+    <>
+      {selectedProduct ? (
+        <main style={styles.main}>
+          <ProductDetail
+            product={selectedProduct}
+            onBack={() => setSelectedProduct(null)}
+            onAddToCart={addToCart}
+          />
+        </main>
+      ) : currentPage === 'home' ? (
+        <main style={styles.main}>
+          <HeroSection />
+          <Categories />
+          <ProductList onSelectProduct={setSelectedProduct} />
+          <Benefits />
+        </main>
+      ) : currentPage === 'sobre' ? (
+        <main style={styles.main}>
+          <SobreNos onNavigate={navigate} />
+        </main>
+      ) : null}
+    </>
   )
 }
 
