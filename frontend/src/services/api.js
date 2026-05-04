@@ -10,6 +10,12 @@ export const productService = {
     return res.json()
   },
 
+  async getOffers() {
+    const res = await fetch(`${API_URL}/api/offers/`)
+    if (!res.ok) throw new Error('Failed to fetch offers')
+    return res.json()
+  },
+
   async getById(id) {
     const res = await fetch(`${API_URL}/api/products/${id}/`)
     if (!res.ok) throw new Error('Product not found')

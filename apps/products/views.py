@@ -34,6 +34,15 @@ class ProductViewSet(viewsets.ModelViewSet):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+class OffersAPIView(viewsets.ViewSet):
+    permission_classes = [AllowAny]
+
+    def list(self, request):
+        offers = Product.objects.filter(active=True, is_offer=True)
+        serializer = ProductSerializer(offers, many=True)
+        return Response(serializer.data)
+
+
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
