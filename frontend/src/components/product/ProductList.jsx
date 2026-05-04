@@ -3,7 +3,7 @@ import { productService } from '../../services/api'
 import ProductCard from './ProductCard'
 import { useIsMobile } from '../../hooks/useIsMobile'
 
-function ProductList({ onSelectProduct }) {
+function ProductList({ onSelectProduct, selectedCategory, onClearCategory, featured = false }) {
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -11,13 +11,20 @@ function ProductList({ onSelectProduct }) {
 
   useEffect(() => {
     loadProducts()
-  }, [])
+  }, [selectedCategory, featured])
 
   const loadProducts = async () => {
     try {
       setLoading(true)
       setError(null)
-      const data = await productService.getAll()
+      let data
+      if (featured) {
+        data = await productService.getFeatured()
+      } else if (selectedCategory) {
+        data = await productService.getAll(selectedCategory.id)
+      } else {
+        data = await productService.getAll()
+      }
       setProducts(data)
     } catch (err) {
       setError(err.message)
@@ -28,7 +35,7 @@ function ProductList({ onSelectProduct }) {
 
   if (loading) {
     return (
-      <section style={styles.section} id="produtos">
+      <section style={styles.section}>
         <div style={styles.container}>
           <div style={styles.loading}>
             <div style={styles.spinner}></div>
@@ -40,12 +47,20 @@ function ProductList({ onSelectProduct }) {
 
   if (error) {
     return (
-      <section style={styles.section} id="produtos">
+      <section style={styles.section}>
         <div style={styles.container}>
           <p style={styles.error}>Erro ao carregar produtos: {error}</p>
         </div>
       </section>
     )
+  }
+
+  const isCategoryView = !!selectedCategory
+  const sectionTitle = isCategoryView ? `Produtos em: ${selectedCategory.name}` : (featured ? '⭐ Mais vendidos' : 'Todos os produtos')
+
+  const handleViewAll = () => {
+    onClearCategory?.()
+    window.scrollTo({ top: document.getElementById('produtos')?.offsetTop - 100, behavior: 'smooth' })
   }
 
   return (
@@ -66,12 +81,26 @@ function ProductList({ onSelectProduct }) {
           <h2 style={{
             ...styles.title,
             ...(isMobile ? { fontSize: '1.375rem' } : {}),
-          }}>Mais vendidos</h2>
-          <a href="#produtos" style={styles.viewAll}>Ver todos →</a>
+          }}>{sectionTitle}</h2>
+          {isCategoryView && (
+            <button onClick={onClearCategory} style={{
+              ...styles.clearBtn,
+              ...(isMobile ? { width: '100%' } : {}),
+            }}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+              </svg>
+              Limpar filtro
+            </button>
+          )}
+          {!isCategoryView && featured && (
+            <a href="#produtos" onClick={handleViewAll} style={styles.viewAll}>Ver todos os produtos →</a>
+          )}
         </div>
 
         {products.length === 0 ? (
-          <p style={styles.empty}>Nenhum produto encontrado</p>
+          <p style={styles.empty}>{isCategoryView ? 'Nenhum produto nesta categoria' : 'Nenhum produto encontrado'}</p>
         ) : (
           <div style={{
             ...styles.grid,
@@ -108,6 +137,19 @@ const styles = {
     fontSize: '1.75rem',
     fontWeight: '700',
     color: '#0F172A',
+  },
+  clearBtn: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '0.375rem',
+    padding: '0.5rem 1rem',
+    background: '#F1F5F9',
+    border: 'none',
+    borderRadius: '0.5rem',
+    color: '#64748B',
+    fontSize: '0.875rem',
+    fontWeight: '500',
+    cursor: 'pointer',
   },
   viewAll: {
     color: '#0D9EA9',

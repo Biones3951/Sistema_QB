@@ -30,6 +30,10 @@ function ProductCard({ product, isMobile = false, onSelectProduct }) {
     }).format(price)
   }
 
+  const isOffer = product.is_offer && product.original_price
+  const discount = isOffer ? Math.round((1 - parseFloat(product.price) / parseFloat(product.original_price)) * 100) : 0
+  const isFeatured = product.is_featured
+
   return (
     <div style={styles.card} onClick={() => onSelectProduct?.(product)}>
       <div style={styles.imageContainer}>
@@ -39,6 +43,32 @@ function ProductCard({ product, isMobile = false, onSelectProduct }) {
           style={styles.image}
           onError={() => setImageError(true)}
         />
+        <div style={styles.badgeContainer}>
+          {isOffer && (
+            <span style={{
+              ...styles.offerBadge,
+              ...(isMobile ? { fontSize: '10px', padding: '0.125rem 0.375rem' } : {}),
+            }}>
+              OFERTA
+            </span>
+          )}
+          {isFeatured && (
+            <span style={{
+              ...styles.featuredBadge,
+              ...(isMobile ? { fontSize: '10px', padding: '0.125rem 0.375rem' } : {}),
+            }}>
+              ⭐ MAIS VENDIDO
+            </span>
+          )}
+          {isOffer && discount > 0 && (
+            <span style={{
+              ...styles.discountBadge,
+              ...(isMobile ? { fontSize: '10px', padding: '0.125rem 0.375rem' } : {}),
+            }}>
+              {discount}% OFF
+            </span>
+          )}
+        </div>
       </div>
 
       <div style={{
@@ -66,10 +96,20 @@ function ProductCard({ product, isMobile = false, onSelectProduct }) {
           ...styles.footer,
           ...(isMobile ? { flexDirection: 'column', gap: '0.5rem', alignItems: 'flex-start' } : {}),
         }}>
-          <span style={{
-            ...styles.price,
-            ...(isMobile ? { fontSize: '1rem' } : {}),
-          }}>{formatPrice(product.price)}</span>
+          <div style={styles.priceGroup}>
+            {isOffer && product.original_price && (
+              <span style={{
+                ...styles.originalPrice,
+                ...(isMobile ? { fontSize: '0.75rem' } : {}),
+              }}>
+                {formatPrice(product.original_price)}
+              </span>
+            )}
+            <span style={{
+              ...styles.price,
+              ...(isMobile ? { fontSize: '1rem' } : {}),
+            }}>{formatPrice(product.price)}</span>
+          </div>
           <button
             onClick={handleAdd}
             disabled={product.stock < 1 || isAdding}
@@ -115,11 +155,58 @@ const styles = {
     background: '#F8FAFC',
     aspectRatio: '1',
     overflow: 'hidden',
+    position: 'relative',
   },
   image: {
     width: '100%',
     height: '100%',
     objectFit: 'cover',
+  },
+  badgeContainer: {
+    position: 'absolute',
+    top: '0',
+    left: '0',
+    right: '0',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '0.25rem',
+    padding: '0.5rem',
+    pointerEvents: 'none',
+  },
+  offerBadge: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    padding: '0.25rem 0.5rem',
+    background: '#DC2626',
+    color: 'white',
+    fontSize: '0.6875rem',
+    fontWeight: '700',
+    borderRadius: '0.375rem',
+    width: 'fit-content',
+    letterSpacing: '0.025em',
+  },
+  featuredBadge: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    padding: '0.25rem 0.5rem',
+    background: '#CCFBF1',
+    color: '#0D9488',
+    fontSize: '0.6875rem',
+    fontWeight: '700',
+    borderRadius: '0.375rem',
+    width: 'fit-content',
+    border: '1px solid #99F6E4',
+  },
+  discountBadge: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    padding: '0.25rem 0.5rem',
+    background: '#DC2626',
+    color: 'white',
+    fontSize: '0.6875rem',
+    fontWeight: '700',
+    borderRadius: '0.375rem',
+    width: 'fit-content',
   },
   content: {
     padding: '1rem',
@@ -147,10 +234,21 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'space-between',
   },
+  priceGroup: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '0.125rem',
+  },
   price: {
     fontSize: '1.125rem',
     fontWeight: '700',
     color: '#0D9EA9',
+  },
+  originalPrice: {
+    fontSize: '0.8125rem',
+    color: '#94A3B8',
+    textDecoration: 'line-through',
+    fontWeight: '500',
   },
   button: {
     display: 'flex',

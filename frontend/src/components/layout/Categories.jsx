@@ -1,16 +1,19 @@
+import { useState } from 'react'
 import { useIsMobile } from '../../hooks/useIsMobile'
 
-function Categories() {
+function Categories({ onSelectCategory }) {
   const isMobile = useIsMobile()
   const isSmallMobile = window.innerWidth < 480
+  const [hovered, setHovered] = useState(null)
 
   const categories = [
-    { name: 'Limpeza', icon: 'spray' },
-    { name: 'Utilidades Domésticas', icon: 'home' },
-    { name: 'Lavanderia', icon: 'washing' },
-    { name: 'Cozinha', icon: 'cup' },
-    { name: 'Organização', icon: 'box' },
-    { name: 'Pet', icon: 'paw' },
+    { id: null, name: 'Todos', icon: 'spray' },
+    { id: 1, name: 'Limpeza', icon: 'spray' },
+    { id: 2, name: 'Utilidades Domésticas', icon: 'home' },
+    { id: 3, name: 'Lavanderia', icon: 'washing' },
+    { id: 4, name: 'Cozinha', icon: 'cup' },
+    { id: 5, name: 'Organização', icon: 'box' },
+    { id: 6, name: 'Pet', icon: 'paw' },
   ]
 
   const icons = {
@@ -60,6 +63,14 @@ function Categories() {
     ),
   }
 
+  const handleClick = (cat) => {
+    if (cat.id === null) {
+      onSelectCategory(null)
+    } else {
+      onSelectCategory(cat)
+    }
+  }
+
   return (
     <section style={styles.section} id="categorias">
       <div style={{
@@ -77,7 +88,16 @@ function Categories() {
           ...(isMobile && !isSmallMobile ? { gridTemplateColumns: 'repeat(3, 1fr)' } : {}),
         }}>
           {categories.map((cat, index) => (
-            <div key={index} style={styles.card}>
+            <div
+              key={index}
+              onClick={() => handleClick(cat)}
+              onMouseEnter={() => setHovered(index)}
+              onMouseLeave={() => setHovered(null)}
+              style={{
+                ...styles.card,
+                ...(hovered === index ? styles.cardHover : {}),
+              }}
+            >
               <div style={{
                 ...styles.cardIcon,
                 ...(isMobile ? { marginBottom: '0.5rem' } : {}),
@@ -90,12 +110,12 @@ function Categories() {
               }}>
                 {cat.name}
               </h3>
-              <a href="#produtos" style={{
+              <span style={{
                 ...styles.cardLink,
                 ...(isMobile ? { fontSize: '0.75rem' } : {}),
               }}>
                 Ver produtos
-              </a>
+              </span>
             </div>
           ))}
         </div>
@@ -136,6 +156,12 @@ const styles = {
     borderRadius: '0.5rem',
     textAlign: 'center',
     overflow: 'hidden',
+    cursor: 'pointer',
+  },
+  cardHover: {
+    background: '#F0FDF9',
+    borderColor: '#0D9488',
+    boxShadow: '0 4px 12px rgba(13, 148, 136, 0.1)',
   },
   cardIcon: {
     marginBottom: '0.75rem',
@@ -151,7 +177,6 @@ const styles = {
   cardLink: {
     fontSize: '0.875rem',
     color: '#0D9EA9',
-    textDecoration: 'none',
   },
 }
 

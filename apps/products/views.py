@@ -17,8 +17,14 @@ class ProductViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = super().get_queryset()
         category = self.request.query_params.get('category')
+        is_featured = self.request.query_params.get('is_featured')
+        is_offer = self.request.query_params.get('is_offer')
         if category:
             queryset = queryset.filter(category_id=category)
+        if is_featured:
+            queryset = queryset.filter(is_featured=True)
+        if is_offer:
+            queryset = queryset.filter(is_offer=True)
         return queryset
 
     def destroy(self, request, *args, **kwargs):

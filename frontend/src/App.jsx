@@ -4,6 +4,7 @@ import Header from './components/layout/Header'
 import HeroSection from './components/layout/HeroSection'
 import Categories from './components/layout/Categories'
 import ProductList from './components/product/ProductList'
+import OffersSection from './components/product/OffersSection'
 import Benefits from './components/layout/Benefits'
 import Footer from './components/layout/Footer'
 import Cart from './components/product/Cart'
@@ -21,10 +22,12 @@ function App() {
 function AppInner() {
   const [currentPage, setCurrentPage] = useState('home')
   const [selectedProduct, setSelectedProduct] = useState(null)
+  const [selectedCategory, setSelectedCategory] = useState(null)
 
   const navigate = useCallback((page) => {
     setCurrentPage(page)
     setSelectedProduct(null)
+    setSelectedCategory(null)
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [])
 
@@ -49,6 +52,8 @@ function AppInner() {
       <SelectedProductView
         selectedProduct={selectedProduct}
         setSelectedProduct={setSelectedProduct}
+        selectedCategory={selectedCategory}
+        setSelectedCategory={setSelectedCategory}
         currentPage={currentPage}
         navigate={navigate}
       />
@@ -58,7 +63,7 @@ function AppInner() {
   )
 }
 
-function SelectedProductView({ selectedProduct, setSelectedProduct, currentPage, navigate }) {
+function SelectedProductView({ selectedProduct, setSelectedProduct, selectedCategory, setSelectedCategory, currentPage, navigate }) {
   const { addItem } = useCart()
 
   const addToCart = useCallback((product, quantity = 1) => {
@@ -78,8 +83,20 @@ function SelectedProductView({ selectedProduct, setSelectedProduct, currentPage,
       ) : currentPage === 'home' ? (
         <main style={styles.main}>
           <HeroSection />
-          <Categories />
-          <ProductList onSelectProduct={setSelectedProduct} />
+          <Categories onSelectCategory={setSelectedCategory} />
+          {selectedCategory && (
+            <ProductList
+              selectedCategory={selectedCategory}
+              onClearCategory={() => setSelectedCategory(null)}
+              onSelectProduct={setSelectedProduct}
+            />
+          )}
+          {!selectedCategory && (
+            <>
+              <ProductList featured onSelectProduct={setSelectedProduct} />
+              <OffersSection onSelectProduct={setSelectedProduct} />
+            </>
+          )}
           <Benefits />
         </main>
       ) : currentPage === 'sobre' ? (

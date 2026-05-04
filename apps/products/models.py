@@ -21,6 +21,13 @@ class Product(models.Model):
         decimal_places=2,
         validators=[MinValueValidator(0)]
     )
+    original_price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        validators=[MinValueValidator(0)]
+    )
     stock = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0)])
     category = models.ForeignKey(
         Category,
@@ -30,6 +37,8 @@ class Product(models.Model):
         related_name='products'
     )
     image_url = models.URLField(max_length=500, blank=True)
+    is_featured = models.BooleanField(default=False)
+    is_offer = models.BooleanField(default=False)
     active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
