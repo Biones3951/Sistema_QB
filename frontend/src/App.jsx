@@ -5,6 +5,7 @@ import HeroSection from './components/layout/HeroSection'
 import Categories from './components/layout/Categories'
 import ProductList from './components/product/ProductList'
 import OffersSection from './components/product/OffersSection'
+import AllProductsSection from './components/product/AllProductsSection'
 import Benefits from './components/layout/Benefits'
 import Footer from './components/layout/Footer'
 import Cart from './components/product/Cart'
@@ -83,18 +84,18 @@ function SelectedProductView({ selectedProduct, setSelectedProduct, selectedCate
       ) : currentPage === 'home' ? (
         <main style={styles.main}>
           <HeroSection />
-          <Categories onSelectCategory={setSelectedCategory} />
-          {selectedCategory && (
-            <ProductList
-              selectedCategory={selectedCategory}
-              onClearCategory={() => setSelectedCategory(null)}
-              onSelectProduct={setSelectedProduct}
-            />
-          )}
-          {!selectedCategory && (
-            <ProductList featured onSelectProduct={setSelectedProduct} />
-          )}
+          <Categories
+            onSelectCategory={setSelectedCategory}
+            selectedCategory={selectedCategory}
+          />
+          <ProductList onSelectProduct={setSelectedProduct} />
           <OffersSection onSelectProduct={setSelectedProduct} />
+          <AllProductsSection
+            id="todos-produtos"
+            selectedCategory={selectedCategory}
+            onClearCategory={() => setSelectedCategory(null)}
+            onSelectProduct={setSelectedProduct}
+          />
           <Benefits />
         </main>
       ) : currentPage === 'sobre' ? (

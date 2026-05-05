@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useIsMobile } from '../../hooks/useIsMobile'
 
-function Categories({ onSelectCategory }) {
+function Categories({ onSelectCategory, selectedCategory }) {
   const isMobile = useIsMobile()
   const isSmallMobile = window.innerWidth < 480
   const [hovered, setHovered] = useState(null)
@@ -69,6 +69,10 @@ function Categories({ onSelectCategory }) {
     } else {
       onSelectCategory(cat)
     }
+    // Scroll to AllProductsSection
+    setTimeout(() => {
+      document.getElementById('todos-produtos')?.scrollIntoView({ behavior: 'smooth' })
+    }, 100)
   }
 
   return (
@@ -87,37 +91,35 @@ function Categories({ onSelectCategory }) {
           ...(isMobile && isSmallMobile ? { gridTemplateColumns: 'repeat(2, 1fr)' } : {}),
           ...(isMobile && !isSmallMobile ? { gridTemplateColumns: 'repeat(3, 1fr)' } : {}),
         }}>
-          {categories.map((cat, index) => (
-            <div
-              key={index}
-              onClick={() => handleClick(cat)}
-              onMouseEnter={() => setHovered(index)}
-              onMouseLeave={() => setHovered(null)}
-              style={{
-                ...styles.card,
-                ...(hovered === index ? styles.cardHover : {}),
-              }}
-            >
-              <div style={{
-                ...styles.cardIcon,
-                ...(isMobile ? { marginBottom: '0.5rem' } : {}),
-              }}>
-                {icons[cat.icon]}
+          {categories.map((cat, index) => {
+            const isSelected = selectedCategory?.id === cat.id
+            return (
+              <div
+                key={index}
+                onClick={() => handleClick(cat)}
+                onMouseEnter={() => setHovered(index)}
+                onMouseLeave={() => setHovered(null)}
+                style={{
+                  ...styles.card,
+                  ...(isSelected ? styles.cardSelected : {}),
+                  ...(hovered === index && !isSelected ? styles.cardHover : {}),
+                }}
+              >
+                <div style={{
+                  ...styles.cardIcon,
+                  ...(isMobile ? { marginBottom: '0.5rem' } : {}),
+                }}>
+                  {icons[cat.icon]}
+                </div>
+                <h3 style={{
+                  ...styles.cardName,
+                  ...(isMobile ? { fontSize: '0.8125rem' } : {}),
+                }}>
+                  {cat.name}
+                </h3>
               </div>
-              <h3 style={{
-                ...styles.cardName,
-                ...(isMobile ? { fontSize: '0.8125rem' } : {}),
-              }}>
-                {cat.name}
-              </h3>
-              <span style={{
-                ...styles.cardLink,
-                ...(isMobile ? { fontSize: '0.75rem' } : {}),
-              }}>
-                Ver produtos
-              </span>
-            </div>
-          ))}
+            )
+          })}
         </div>
       </div>
     </section>
@@ -157,11 +159,17 @@ const styles = {
     textAlign: 'center',
     overflow: 'hidden',
     cursor: 'pointer',
+    transition: 'all 0.2s',
   },
   cardHover: {
     background: '#F0FDF9',
-    borderColor: '#0D9488',
+    borderColor: '#99F6E4',
     boxShadow: '0 4px 12px rgba(13, 148, 136, 0.1)',
+  },
+  cardSelected: {
+    background: '#F0FDF9',
+    border: '2px solid #0D9488',
+    boxShadow: '0 4px 12px rgba(13, 148, 136, 0.15)',
   },
   cardIcon: {
     marginBottom: '0.75rem',
@@ -173,10 +181,6 @@ const styles = {
     marginBottom: '0.5rem',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
-  },
-  cardLink: {
-    fontSize: '0.875rem',
-    color: '#0D9EA9',
   },
 }
 
