@@ -75,6 +75,7 @@ def admin_product_create(request):
         category_id = request.POST.get('category')
         image_url = request.POST.get('image_url')
         active = request.POST.get('active') == 'on'
+        featured = request.POST.get('featured') == 'on'
         
         product = Product.objects.create(
             name=name,
@@ -83,7 +84,8 @@ def admin_product_create(request):
             stock=stock,
             category_id=category_id if category_id else None,
             image_url=image_url,
-            active=active
+            active=active,
+            is_featured=featured
         )
         messages.success(request, f'Produto "{product.name}" criado com sucesso!')
         return redirect('admin_products')
@@ -104,6 +106,7 @@ def admin_product_edit(request, product_id):
         product.category_id = request.POST.get('category') or None
         product.image_url = request.POST.get('image_url')
         product.active = request.POST.get('active') == 'on'
+        product.is_featured = request.POST.get('featured') == 'on'
         product.save()
         messages.success(request, f'Produto "{product.name}" atualizado!')
         return redirect('admin_products')
@@ -157,6 +160,7 @@ def admin_api_products(request):
             'category': p.category.name if p.category else None,
             'image_url': p.image_url,
             'active': p.active,
+            'is_featured': p.is_featured,
             'created_at': p.created_at.isoformat(),
         })
     return JsonResponse(data, safe=False)
