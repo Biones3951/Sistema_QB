@@ -60,7 +60,7 @@ function ProductList({ onSelectProduct }) {
           <h2 style={{
             ...styles.title,
             ...(isMobile ? { fontSize: '1.375rem' } : {}),
-          }}>⭐ Mais Vendidos</h2>
+          }}> Mais Vendidos</h2>
         </div>
 
         {products.length === 0 ? (

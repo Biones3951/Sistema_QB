@@ -47,7 +47,7 @@ function ProductCard({ product, isMobile = false, onSelectProduct }) {
               ...styles.featuredBadge,
               ...(isMobile ? { fontSize: '10px', padding: '0.125rem 0.375rem' } : {}),
             }}>
-              ⭐ MAIS VENDIDO
+                MAIS VENDIDO
             </span>
           )}
         </div>
