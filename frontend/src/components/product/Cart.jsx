@@ -3,8 +3,7 @@ import { useCart } from '../../context/CartContext'
 import { formatPrice } from '../../utils/formatters'
 import { generateWhatsAppMessage, createWhatsAppLink } from '../../utils/whatsapp'
 import { useIsMobile } from '../../hooks/useIsMobile'
-
-const WHATSAPP_NUMBER = '5511999999999'
+import { WHATSAPP_NUMBER } from '../../config'
 
 function Cart() {
   const { items, removeItem, updateQuantity, getTotal, getItemCount, clearCart } = useCart()

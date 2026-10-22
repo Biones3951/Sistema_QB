@@ -1,12 +1,13 @@
 import { useEffect } from 'react'
 import { useIsMobile } from '../../hooks/useIsMobile'
+import { WHATSAPP_NUMBER } from '../../config'
 
 function Benefits() {
   const isMobile = useIsMobile()
 
   const handleWhatsApp = () => {
     const message = encodeURIComponent('Olá! Vim pelo site da QB Home e quero saber mais sobre os benefícios. 😊')
-    window.open('https://wa.me/5511999999999?text=' + message, '_blank')
+    window.open('https://wa.me/' + WHATSAPP_NUMBER + '?text=' + message, '_blank')
   }
 
   useEffect(() => {

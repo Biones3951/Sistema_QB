@@ -1,8 +1,7 @@
 import { useEffect } from 'react'
 import heroImg from '../../assets/Logo_Produtos.png'
 import { useIsMobile } from '../../hooks/useIsMobile'
-
-const WHATSAPP_NUMBER = '5511999999999'
+import { WHATSAPP_NUMBER } from '../../config'
 
 function HeroSection() {
   const isMobile = useIsMobile()

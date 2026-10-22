@@ -35,3 +35,6 @@ db.sqlite3
 
 # Private
 *.env
+# Django collectstatic
+staticfiles/
+media/

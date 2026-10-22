@@ -1,0 +1,12 @@
+# Backend QB Home - Django + DRF
+Django==6.0.2
+djangorestframework==3.16.1
+django-cors-headers==4.9.0
+python-dotenv==1.2.2
+
+# Banco de dados (Supabase / PostgreSQL)
+psycopg2-binary==2.9.12
+
+# Producao
+gunicorn==23.0.0
+whitenoise==6.9.0

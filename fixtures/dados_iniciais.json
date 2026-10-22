@@ -1,0 +1,91 @@
+[
+{
+  "model": "products.category",
+  "pk": 1,
+  "fields": {
+    "name": "Utilidades Domésticas"
+  }
+},
+{
+  "model": "products.category",
+  "pk": 2,
+  "fields": {
+    "name": "Limpeza"
+  }
+},
+{
+  "model": "products.category",
+  "pk": 3,
+  "fields": {
+    "name": "Lavanderia"
+  }
+},
+{
+  "model": "products.category",
+  "pk": 4,
+  "fields": {
+    "name": "Cozinha"
+  }
+},
+{
+  "model": "products.category",
+  "pk": 5,
+  "fields": {
+    "name": "Organização"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 1,
+  "fields": {
+    "name": "vassoura flex",
+    "description": "ressistente, douradora",
+    "price": "9.79",
+    "original_price": null,
+    "stock": 110,
+    "category": 1,
+    "image_url": "",
+    "is_featured": false,
+    "is_offer": false,
+    "active": true,
+    "created_at": "2026-04-24T20:35:42.589Z",
+    "updated_at": "2026-10-22T00:56:33.407Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 2,
+  "fields": {
+    "name": "Amaciante Ypê",
+    "description": "Limpa roupas com 100% de eficácia, 600 ml o recipiente, cheiro rosas.",
+    "price": "9.99",
+    "original_price": null,
+    "stock": 9,
+    "category": 3,
+    "image_url": "",
+    "is_featured": true,
+    "is_offer": false,
+    "active": true,
+    "created_at": "2026-04-25T03:29:39.347Z",
+    "updated_at": "2026-10-22T00:56:33.399Z"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 3,
+  "fields": {
+    "name": "Rodo Flex 40cm",
+    "description": "É uma boa solução para quem precisa secar, lavar e limpar sua casa",
+    "price": "10.97",
+    "original_price": null,
+    "stock": 10,
+    "category": 1,
+    "image_url": "",
+    "is_featured": true,
+    "is_offer": false,
+    "active": true,
+    "created_at": "2026-05-04T13:05:24.266Z",
+    "updated_at": "2026-05-07T00:45:52.456Z"
+  }
+}
+]

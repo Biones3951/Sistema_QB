@@ -16,7 +16,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['name', 'category', 'price_formatted', 'stock', 'is_featured', 'is_offer', 'active', 'created_at']
+    list_display = ['name', 'category', 'price_formatted', 'stock', 'is_featured', 'is_offer', 'is_active', 'created_at']
     list_display_links = ['name']
     list_filter = ['active', 'is_offer', 'is_featured', 'category', 'created_at']
     list_editable = ['is_offer']
@@ -26,13 +26,15 @@ class ProductAdmin(admin.ModelAdmin):
 
     fieldsets = [
         ('Informações principais', {
-            'fields': ('name', 'description', 'category')
+            'fields': ('name', 'description', 'category', 'active')
         }),
         ('Preço e Estoque', {
-            'fields': ('price', 'stock')
+            'fields': ('price', 'original_price', 'stock')
         }),
         ('Destaque', {
-            'fields': ('is_active', 'is_offer', 'original_price')
+            'fields': ('is_featured', 'is_offer'),
+            'description': 'Mais Vendidos usa "em destaque". Ofertas da Semana usa "em oferta" '
+                           'e mostra o preço antigo quando "preço original" está preenchido.'
         }),
         ('Imagem', {
             'fields': ('image_url',),
@@ -44,6 +46,6 @@ class ProductAdmin(admin.ModelAdmin):
     def price_formatted(self, obj):
         return format_html('<strong>R$ {}</strong>', obj.price)
 
-    @admin.display(boolean=True, description='Ativo')
-    def active(self, obj):
+    @admin.display(boolean=True, description='Ativo', ordering='active')
+    def is_active(self, obj):
         return obj.active

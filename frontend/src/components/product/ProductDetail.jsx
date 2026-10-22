@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useIsMobile } from '../../hooks/useIsMobile'
-
-const WHATSAPP_NUMBER = '5511999999999'
+import { WHATSAPP_NUMBER } from '../../config'
 
 function ProductDetail({ product, onBack, onAddToCart }) {
   const isMobile = useIsMobile()
