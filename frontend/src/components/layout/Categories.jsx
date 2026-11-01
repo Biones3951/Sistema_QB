@@ -54,7 +54,7 @@ function Categories({ onSelectCategory, selectedCategory }) {
     ),
     cup: (
       <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0D9EA9" strokeWidth="1.5">
-        <path d="M17 8h1a4 4 0 0 1 1 0 8h-1"/>
+        <path d="M17 8h1a4 4 0 0 1 0 8h-1"/>
         <path d="M3 8a9 9 0 0 1 18 0v3a2 2 0 0 1-2 2h-1"/>
         <line x1="5" y1="10" x2="19" y2="10"/>
       </svg>

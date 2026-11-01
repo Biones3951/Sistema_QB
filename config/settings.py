@@ -112,7 +112,8 @@ else:
             'PASSWORD': os.getenv('DB_PASSWORD'),
             'HOST': os.getenv('DB_HOST'),
             'PORT': os.getenv('DB_PORT'),
-            'OPTIONS': {'sslmode': os.getenv('DB_SSLMODE', 'require')},
+            # 'prefer': usa SSL quando o servidor oferece, sem quebrar um Postgres local
+            'OPTIONS': {'sslmode': os.getenv('DB_SSLMODE', 'prefer')},
         }
     }
 
