@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import heroImg from '../../assets/Logo_Produtos.png'
 import { useIsMobile } from '../../hooks/useIsMobile'
 import { WHATSAPP_NUMBER } from '../../config'
@@ -10,26 +9,6 @@ function HeroSection() {
     const message = encodeURIComponent('Olá! Vim pelo site da QB Home e gostaria de fazer um pedido. 😊')
     window.open('https://wa.me/' + WHATSAPP_NUMBER + '?text=' + message, '_blank')
   }
-
-  useEffect(() => {
-    const style = document.createElement('style')
-    style.textContent = `
-      @keyframes float {
-        0%, 100% { transform: translateY(0px); }
-        50% { transform: translateY(-10px); }
-      }
-      @keyframes pulseDot {
-        0%, 100% { opacity: 1; transform: scale(1); }
-        50% { opacity: 0.6; transform: scale(1.3); }
-      }
-      .whatsapp-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 16px 40px rgba(13,158,169,0.50) !important;
-      }
-    `
-    document.head.appendChild(style)
-    return () => { document.head.removeChild(style) }
-  }, [])
 
   return (
     <section style={styles.section}>

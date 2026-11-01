@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useCart } from '../../context/CartContext'
+import { useCart } from '../../hooks/useCart'
 import { useIsMobile } from '../../hooks/useIsMobile'
 import logo from '../../assets/logo.jpg'
 import { WHATSAPP_NUMBER } from '../../config'

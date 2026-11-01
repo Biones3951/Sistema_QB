@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useCart } from '../../context/CartContext'
+import { useCart } from '../../hooks/useCart'
 
 function ProductCard({ product, isMobile = false, onSelectProduct }) {
   const { addItem } = useCart()

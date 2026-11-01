@@ -1,21 +1,8 @@
-import { useEffect } from 'react'
-import { useIsMobile } from '../../hooks/useIsMobile'
-import { WHATSAPP_NUMBER } from '../../config'
+import { useIsMobile } from '../hooks/useIsMobile'
+import { WHATSAPP_NUMBER } from '../config'
 
 function SobreNos({ onNavigate }) {
   const isMobile = useIsMobile()
-
-  useEffect(() => {
-    const style = document.createElement('style')
-    style.textContent = `
-      @keyframes fadeInUp {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-      }
-    `
-    document.head.appendChild(style)
-    return () => { document.head.removeChild(style) }
-  }, [])
 
   const handleWhatsApp = () => {
     const message = encodeURIComponent('Olá! Vim pelo site da QB Home e gostaria de saber mais sobre vocês. 😊')

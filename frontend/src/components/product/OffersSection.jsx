@@ -1,36 +1,14 @@
-import { useState, useEffect } from 'react'
+import { useCallback } from 'react'
 import { productService } from '../../services/api'
 import ProductCard from './ProductCard'
+import { useAsyncData } from '../../hooks/useAsyncData'
 import { useIsMobile } from '../../hooks/useIsMobile'
 
 function OffersSection({ onSelectProduct }) {
-  const [offers, setOffers] = useState([])
-  const [loading, setLoading] = useState(true)
   const isMobile = useIsMobile()
 
-  useEffect(() => {
-    const load = async () => {
-      try {
-        const data = await productService.getOffers()
-        setOffers(data)
-      } catch (err) {
-        console.error('Erro ao carregar ofertas:', err)
-      } finally {
-        setLoading(false)
-      }
-    }
-    load()
-
-    const style = document.createElement('style')
-    style.textContent = `
-      @keyframes pulse-red {
-        0%, 100% { opacity: 1; transform: scale(1); }
-        50% { opacity: 0.4; transform: scale(1.8); }
-      }
-    `
-    document.head.appendChild(style)
-    return () => { document.head.removeChild(style) }
-  }, [])
+  const fetchOffers = useCallback(() => productService.getOffers(), [])
+  const { data: offers, loading } = useAsyncData(fetchOffers, [])
 
   if (loading) return null
   if (offers.length === 0) return null

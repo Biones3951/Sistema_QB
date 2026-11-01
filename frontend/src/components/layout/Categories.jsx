@@ -1,50 +1,34 @@
-import { useState, useEffect } from 'react'
+import { useCallback, useState } from 'react'
 import { productService } from '../../services/api'
+import { useAsyncData } from '../../hooks/useAsyncData'
 import { useIsMobile } from '../../hooks/useIsMobile'
+
+// Cada categoria cadastrada no admin recebe um icone pelo nome
+function getIcon(name) {
+  const key = name.toLowerCase()
+  if (key.includes('limpeza')) return 'spray'
+  if (key.includes('utilidade') || key.includes('doméstica')) return 'home'
+  if (key.includes('lavanderia')) return 'washing'
+  if (key.includes('cozinha')) return 'cup'
+  if (key.includes('organiz')) return 'box'
+  if (key.includes('pet')) return 'paw'
+  return 'default'
+}
 
 function Categories({ onSelectCategory, selectedCategory }) {
   const isMobile = useIsMobile()
   const isSmallMobile = window.innerWidth < 480
-  const [categories, setCategories] = useState([])
-  const [loading, setLoading] = useState(true)
   const [hovered, setHovered] = useState(null)
 
-  useEffect(() => {
-    loadCategories()
+  const fetchCategories = useCallback(async () => {
+    const data = await productService.getCategories()
+    return [
+      { id: null, name: 'Todos', icon: 'spray' },
+      ...data.map(cat => ({ id: cat.id, name: cat.name, icon: getIcon(cat.name) })),
+    ]
   }, [])
 
-  const loadCategories = async () => {
-    try {
-      setLoading(true)
-      const data = await productService.getCategories()
-      const mapped = [
-        { id: null, name: 'Todos', icon: 'spray' }
-      ]
-      data.forEach(cat => {
-        mapped.push({
-          id: cat.id,
-          name: cat.name,
-          icon: getIcon(cat.name)
-        })
-      })
-      setCategories(mapped)
-    } catch (err) {
-      console.error('Erro ao carregar categorias:', err)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const getIcon = (name) => {
-    const key = name.toLowerCase()
-    if (key.includes('limpeza')) return 'spray'
-    if (key.includes('utilidade') || key.includes('doméstica')) return 'home'
-    if (key.includes('lavanderia')) return 'washing'
-    if (key.includes('cozinha')) return 'cup'
-    if (key.includes('organiz')) return 'box'
-    if (key.includes('pet')) return 'paw'
-    return 'default'
-  }
+  const { data: categories, loading } = useAsyncData(fetchCategories, [])
 
   const icons = {
     spray: (

@@ -1,32 +1,18 @@
-import { useState, useEffect } from 'react'
+import { useCallback } from 'react'
 import { productService } from '../../services/api'
 import ProductCard from './ProductCard'
+import { useAsyncData } from '../../hooks/useAsyncData'
 import { useIsMobile } from '../../hooks/useIsMobile'
 
 function AllProductsSection({ selectedCategory, onClearCategory, onSelectProduct }) {
-  const [products, setProducts] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
   const isMobile = useIsMobile()
 
-  useEffect(() => {
-    loadProducts()
-  }, [selectedCategory])
+  const fetchProducts = useCallback(
+    () => productService.getAll(selectedCategory ? selectedCategory.id : null),
+    [selectedCategory],
+  )
 
-  const loadProducts = async () => {
-    try {
-      setLoading(true)
-      setError(null)
-      const data = selectedCategory
-        ? await productService.getAll(selectedCategory.id)
-        : await productService.getAll()
-      setProducts(data)
-    } catch (err) {
-      setError(err.message)
-    } finally {
-      setLoading(false)
-    }
-  }
+  const { data: products, loading, error } = useAsyncData(fetchProducts, [])
 
   const sectionTitle = selectedCategory
     ? `📦 ${selectedCategory.name}`

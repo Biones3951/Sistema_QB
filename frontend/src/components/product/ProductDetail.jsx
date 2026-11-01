@@ -10,20 +10,11 @@ function ProductDetail({ product, onBack, onAddToCart }) {
   const [hoverCart, setHoverCart] = useState(false)
   const [hoverWpp, setHoverWpp] = useState(false)
 
-  if (!product) return null
-
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
-    const style = document.createElement('style')
-    style.textContent = `
-      @keyframes pulse {
-        0%, 100% { opacity: 1; transform: scale(1); }
-        50% { opacity: 0.5; transform: scale(1.5); }
-      }
-    `
-    document.head.appendChild(style)
-    return () => { document.head.removeChild(style) }
   }, [])
+
+  if (!product) return null
 
   const placeholderImg = 'data:image/svg+xml,' + encodeURIComponent(`
     <svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600">
@@ -337,7 +328,7 @@ const styles = {
     height: '8px',
     borderRadius: '50%',
     background: '#22C55E',
-    animation: 'pulse 2s infinite',
+    animation: 'pulse-scale 2s infinite',
   },
   offerBadge: {
     display: 'inline-flex',

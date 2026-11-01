@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import { useIsMobile } from '../../hooks/useIsMobile'
 import { WHATSAPP_NUMBER } from '../../config'
 
@@ -9,17 +8,6 @@ function Benefits() {
     const message = encodeURIComponent('Olá! Vim pelo site da QB Home e quero saber mais sobre os benefícios. 😊')
     window.open('https://wa.me/' + WHATSAPP_NUMBER + '?text=' + message, '_blank')
   }
-
-  useEffect(() => {
-    const style = document.createElement('style')
-    style.textContent = `
-      .benefit-card:hover {
-        transform: translateY(-6px) !important;
-      }
-    `
-    document.head.appendChild(style)
-    return () => { document.head.removeChild(style) }
-  }, [])
 
   const benefits = [
     {

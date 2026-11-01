@@ -15,17 +15,33 @@ no site).
 ```
 Sistema_QB/
 ├── apps/
-│   ├── products/      # models Product e Category, API REST
-│   ├── admin_panel/   # painel próprio em /panel/ (login, CRUD, dashboard)
-│   └── core/          # app vazio, reservado
-├── config/            # settings, urls, wsgi
-├── frontend/          # React + Vite
-├── fixtures/          # dados iniciais para carregar no Supabase
-├── build.sh           # build do backend na plataforma de deploy
-├── Procfile           # comando de start (gunicorn)
-├── render.yaml        # configuração do Render
+│   ├── products/        # models Product e Category, API REST, testes
+│   ├── admin_panel/     # painel próprio em /panel/ (login, CRUD, dashboard)
+│   └── core/            # comandos de manutenção (manage.py db_info)
+├── config/              # settings, urls, wsgi
+├── frontend/
+│   └── src/
+│       ├── components/
+│       │   ├── layout/  # Header, Footer, Hero, Categories, Benefits
+│       │   └── product/ # cards, listas, detalhe, carrinho
+│       ├── pages/       # Home, SobreNos
+│       ├── context/     # CartContext + CartProvider
+│       ├── hooks/       # useCart, useAsyncData, useIsMobile
+│       ├── services/    # chamadas à API
+│       ├── utils/       # formatação, mensagem do WhatsApp
+│       ├── config.js    # número do WhatsApp e URL da API
+│       └── index.css    # variáveis de cor, animações, reset
+├── fixtures/            # dados iniciais para carregar no Supabase
+├── docs/MELHORIAS.md    # o que ainda falta, por prioridade
+├── build.sh             # build do backend na plataforma de deploy
+├── Procfile             # comando de start (gunicorn)
+├── render.yaml          # configuração do Render
 └── requirements.txt
 ```
+
+O frontend usa estilos inline por componente (`const styles = {}`), com as cores,
+animações e o reset no `index.css`. Componentes não injetam `<style>` em runtime:
+toda animação nova entra no `index.css`.
 
 ## API
 
@@ -68,6 +84,14 @@ npm run dev
 ```
 
 Site em http://localhost:5173
+
+### Comandos úteis
+
+```bash
+python manage.py db_info     # mostra em qual banco está falando e testa a conexão
+python manage.py test        # roda a suíte de testes (API + painel)
+cd frontend && npm run lint  # checa o código do frontend
+```
 
 ---
 
@@ -163,3 +187,8 @@ Pelo painel em `/panel/` (ou pelo `/admin/` do Django):
 ## Variáveis de ambiente
 
 Backend: veja [`.env.example`](.env.example) · Frontend: veja [`frontend/.env.example`](frontend/.env.example)
+
+## O que ainda falta
+
+A lista de pendências e melhorias, por prioridade, está em
+[`docs/MELHORIAS.md`](docs/MELHORIAS.md).

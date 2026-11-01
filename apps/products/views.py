@@ -1,54 +1,49 @@
-from rest_framework import viewsets, status
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework import generics, status, viewsets
+from rest_framework.permissions import AllowAny, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from apps.products.models import Category, Product
 from apps.products.serializers import CategorySerializer, ProductSerializer
 
 
 class ProductViewSet(viewsets.ModelViewSet):
-    queryset = Product.objects.filter(active=True)
-    serializer_class = ProductSerializer
+    """Catalogo de produtos: leitura publica, escrita apenas autenticada."""
 
-    def get_permissions(self):
-        if self.request.method in ['GET']:
-            return [AllowAny()]
-        return [IsAuthenticated()]
+    serializer_class = ProductSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     def get_queryset(self):
-        queryset = super().get_queryset()
-        category = self.request.query_params.get('category')
-        is_featured = self.request.query_params.get('is_featured')
-        is_offer = self.request.query_params.get('is_offer')
+        queryset = Product.objects.filter(active=True).select_related('category')
+        params = self.request.query_params
+
+        category = params.get('category')
         if category:
             queryset = queryset.filter(category_id=category)
-        if is_featured:
+        if params.get('is_featured'):
             queryset = queryset.filter(is_featured=True)
-        if is_offer:
+        if params.get('is_offer'):
             queryset = queryset.filter(is_offer=True)
+
         return queryset
 
     def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
-        instance.active = False
-        instance.save()
+        """Produto nao e apagado: so sai do site."""
+        product = self.get_object()
+        product.active = False
+        product.save(update_fields=['active', 'updated_at'])
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class OffersAPIView(viewsets.ViewSet):
+class OfferListAPIView(generics.ListAPIView):
+    """Produtos marcados como oferta, para a secao "Ofertas da Semana"."""
+
+    serializer_class = ProductSerializer
     permission_classes = [AllowAny]
 
-    def list(self, request):
-        offers = Product.objects.filter(active=True, is_offer=True)
-        serializer = ProductSerializer(offers, many=True)
-        return Response(serializer.data)
+    def get_queryset(self):
+        return Product.objects.filter(active=True, is_offer=True).select_related('category')
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_permissions(self):
-        if self.request.method == 'GET':
-            return [AllowAny()]
-        return [IsAuthenticated()]
+    permission_classes = [IsAuthenticatedOrReadOnly]

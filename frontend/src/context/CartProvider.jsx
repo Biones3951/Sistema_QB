@@ -1,17 +1,24 @@
-import { createContext, useContext, useState, useEffect } from 'react'
-
-const CartContext = createContext()
+import { useEffect, useState } from 'react'
+import { CartContext } from './CartContext'
 
 const CART_STORAGE_KEY = 'qb_cart'
 
 export function CartProvider({ children }) {
   const [items, setItems] = useState(() => {
-    const saved = localStorage.getItem(CART_STORAGE_KEY)
-    return saved ? JSON.parse(saved) : []
+    try {
+      const saved = localStorage.getItem(CART_STORAGE_KEY)
+      return saved ? JSON.parse(saved) : []
+    } catch {
+      return []
+    }
   })
 
   useEffect(() => {
-    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items))
+    try {
+      localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items))
+    } catch {
+      // navegacao privada ou armazenamento cheio: o carrinho segue so em memoria
+    }
   }, [items])
 
   const addItem = (product, quantity = 1) => {
@@ -69,12 +76,4 @@ export function CartProvider({ children }) {
       {children}
     </CartContext.Provider>
   )
-}
-
-export function useCart() {
-  const context = useContext(CartContext)
-  if (!context) {
-    throw new Error('useCart must be used within CartProvider')
-  }
-  return context
 }

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { useCart } from '../../context/CartContext'
+import { useCart } from '../../hooks/useCart'
 import { formatPrice } from '../../utils/formatters'
 import { generateWhatsAppMessage, createWhatsAppLink } from '../../utils/whatsapp'
 import { useIsMobile } from '../../hooks/useIsMobile'
